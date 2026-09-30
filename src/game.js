@@ -1,9 +1,13 @@
 import * as THREE from 'three';
 
-const canvas=document.querySelector('#view'), scene=new THREE.Scene();scene.background=new THREE.Color(0x080a0b);scene.fog=new THREE.FogExp2(0x080a0b,.038);
+const canvas=document.querySelector('#view'), scene=new THREE.Scene();scene.background=new THREE.Color(0x080a0b);scene.fog=new THREE.FogExp2(0x101112,.022);
 const camera=new THREE.PerspectiveCamera(72,innerWidth/innerHeight,.1,100);camera.rotation.order='YXZ';
-const renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
-scene.add(new THREE.HemisphereLight(0x889099,0x171512,.33));
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.3;
+scene.add(new THREE.HemisphereLight(0xb6c2c4,0x383126,.8));
+scene.add(new THREE.AmbientLight(0x9a9589,.35));
+// A battered shoulder lamp keeps navigation readable without washing out the shadows.
+const flashlight=new THREE.SpotLight(0xffe8c3,34,23,Math.PI/5,0.45,1.25);
+flashlight.position.set(0,0,0);const flashlightTarget=new THREE.Object3D();flashlightTarget.position.set(0,0,-1);camera.add(flashlight);camera.add(flashlightTarget);flashlight.target=flashlightTarget;scene.add(camera);
 const player={pos:new THREE.Vector3(0,1.7,10),yaw:0,pitch:0,health:3,keys:{},moving:false,running:false};camera.position.copy(player.pos);
 const mat=(color,roughness=.8,metalness=0)=>new THREE.MeshStandardMaterial({color,roughness,metalness});
 const concrete=mat(0x343433),floorMat=mat(0x262726,.95),rust=mat(0x583c2d,.78,.25),dark=mat(0x101212),yellow=mat(0xc39a50,.55,.3),red=mat(0x9d2820,.45),wood=mat(0x514439);
